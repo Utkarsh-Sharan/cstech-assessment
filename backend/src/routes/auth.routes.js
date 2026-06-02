@@ -1,10 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
-import fs from "fs";
 import path from "path";
-import csv from "csv-parser";
-import xlsx from "xlsx";
-import { loginUser, registerUser } from "../controllers/auth.controllers.js";
+import { loginUser, registerUser, uploadFile } from "../controllers/auth.controllers.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -35,6 +33,6 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 
 //protected routes
-router.route("/upload-file").post(upload.single("file"));
+router.route("/upload-file").post(verifyJWT, upload.single("file"), uploadFile);
 
 export default router;

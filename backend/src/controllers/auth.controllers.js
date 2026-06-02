@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import fs from "fs";
+import path from "path";
+import csv from "csv-parser";
+import xlsx from "xlsx";
 import { User } from "../models/user.model.js";
 
 const registerUser = async (req, res) => {
@@ -76,10 +80,53 @@ const loginUser = async (req, res) => {
 }
 
 const uploadFile = async (req, res) => {
-    
+    try {
+        const filePath = req.file.path;
+        const ext = path.extname(req.file.originalName).toLowerCase();
+
+        let items = [];
+
+        if(ext === ".csv") {
+            fs.createReadStream(filePath)
+                .pipe(csv())
+                .on("data", (row) => {
+                    items.push({
+                        FirstName: row.FirstName,
+                        Phone: row.Phone,
+                        Notes: row.Notes,
+                    })
+                })
+                .on("end", () => {
+                    //distribute tasks
+
+                    res.status(200).json({message: "CSV processed", items});
+                    fs.unlinkSync(filePath);
+                })
+        }
+        else {
+            const workbook = xlsx.readFile(filePath);
+            const sheetName = workbook.SheetNames[0];
+            const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+            items = sheetData.map((row) => ({
+                FirstName: row.FirstName,
+                Phone: row.Phone,
+                Notes: row.Notes,
+            }));
+
+            //distribute tasks
+
+            res.status(200).json({message: "Excel processed!", items});
+
+            fs.unlinkSync(filePath);
+        }
+    } catch (error) {
+        return res.status(400).json({message: "Failed to upload file!"}, error);
+    }
 }
 
 export {
     registerUser,
     loginUser,
+    uploadFile,
 }
