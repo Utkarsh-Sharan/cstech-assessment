@@ -5,6 +5,7 @@ import path from "path";
 import csv from "csv-parser";
 import xlsx from "xlsx";
 import { User } from "../models/user.model.js";
+import { Task } from "../models/task.model.js";
 
 const registerUser = async (req, res) => {
     try {
@@ -101,24 +102,43 @@ const getAllAgents = async (req, res) => {
 const distributeTasks = async (tasks) => {
     try {
         const agents = await User.find({role: "agent"});
-        if(!agents) return res.status(400).json({
+        if(!agents) return res.status(409).json({
             message: "No agents found",
             error,
         });
 
+        const agentCount = agents.length;
+        const taskCount = tasks.length;
+        
+        const perAgent = Math.floor(taskCount / agentCount);
+        const remainder = taskCount % agentCount;
 
+        let index = 0;
+
+        for(let i = 0; i < agentCount; ++i) {
+            let count = perAgent + (i < remainder ? 1 : 0);
+
+            const assignedTasks = tasks.slice(index, index + count);
+            index += count;
+
+            for(let task of assignedTasks) {
+                await Task.create({
+                    agentId: agents[i]._id,
+                    firstName: task.FirstName,
+                    phone: task.Phone,
+                    notes: task.Notes,
+                });
+            }
+        }
     } catch (error) {
-        return res.status(400).json({
-            message: "Failed to distribute tasks!",
-            error,
-        });
+        console.error("Failed to distribute tasks!", error);
     }
 }
 
 const uploadFile = async (req, res) => {
     try {
         const filePath = req.file.path;
-        const ext = path.extname(req.file.originalName).toLowerCase();
+        const ext = path.extname(req.file.originalname).toLowerCase();
 
         let items = [];
 
@@ -138,8 +158,11 @@ const uploadFile = async (req, res) => {
                     res.status(200).json({message: "CSV processed", items});
                     fs.unlinkSync(filePath);
                 })
+                .on("error", (err) => {
+                    res.status(400).json({message: "Error parsing CSV", err});
+                })
         }
-        else {
+        else if(ext === ".xlsx" || ext === ".xls") {
             const workbook = xlsx.readFile(filePath);
             const sheetName = workbook.SheetNames[0];
             const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
@@ -155,8 +178,11 @@ const uploadFile = async (req, res) => {
             res.status(200).json({message: "Excel processed!", items});
             fs.unlinkSync(filePath);
         }
+        else {
+            return res.status(400).json({message: "Unsupported file type!"});
+        }
     } catch (error) {
-        return res.status(400).json({message: "Failed to upload file!"}, error);
+        return res.status(400).json({message: "Failed to upload file!", error});
     }
 }
 
