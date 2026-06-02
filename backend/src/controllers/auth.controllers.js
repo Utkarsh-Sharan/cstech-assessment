@@ -75,6 +75,10 @@ const loginUser = async (req, res) => {
     }
 }
 
+const uploadFile = async (req, res) => {
+
+}
+
 export {
     registerUser,
     loginUser,
