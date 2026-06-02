@@ -8,7 +8,7 @@ import { User } from "../models/user.model.js";
 
 const registerUser = async (req, res) => {
     try {
-        const {fullName, email, password} = req.body;
+        const {fullName, email, phone, password, role = "admin"} = req.body;
 
         const userAlreadyExist = await User.findOne({email});
 
@@ -20,7 +20,9 @@ const registerUser = async (req, res) => {
         const user = await User.create({
             fullName,
             email,
+            phone,
             password: hashedPassword,
+            role: role,
         });
 
         const token = jwt.sign({
@@ -36,6 +38,8 @@ const registerUser = async (req, res) => {
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                phone: user.phone,
+                role: user.role,
             }
         });
     } catch (error) {
@@ -68,6 +72,8 @@ const loginUser = async (req, res) => {
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                phone: user.phone,
+                role: user.role,
             }
         });
     } catch (error) {
@@ -75,6 +81,36 @@ const loginUser = async (req, res) => {
         return res.status(400).json({
             message: "Failed to login",
             error: error
+        });
+    }
+}
+
+const getAllAgents = async (req, res) => {
+    try {
+        const agents = await User.find({role: "agent"});
+
+        return res.status(200).json({
+            message: "Fetched agents successfully!",
+            agents,
+        });
+    } catch (error) {
+        return res.status(400).json({message: "Failed to fetch agents!"}, error);
+    }
+}
+
+const distributeTasks = async (tasks) => {
+    try {
+        const agents = await User.find({role: "agent"});
+        if(!agents) return res.status(400).json({
+            message: "No agents found",
+            error,
+        });
+
+
+    } catch (error) {
+        return res.status(400).json({
+            message: "Failed to distribute tasks!",
+            error,
         });
     }
 }
@@ -97,7 +133,7 @@ const uploadFile = async (req, res) => {
                     })
                 })
                 .on("end", () => {
-                    //distribute tasks
+                    distributeTasks(items);
 
                     res.status(200).json({message: "CSV processed", items});
                     fs.unlinkSync(filePath);
@@ -114,10 +150,9 @@ const uploadFile = async (req, res) => {
                 Notes: row.Notes,
             }));
 
-            //distribute tasks
+            distributeTasks(items);
 
             res.status(200).json({message: "Excel processed!", items});
-
             fs.unlinkSync(filePath);
         }
     } catch (error) {
@@ -129,4 +164,5 @@ export {
     registerUser,
     loginUser,
     uploadFile,
+    getAllAgents,
 }

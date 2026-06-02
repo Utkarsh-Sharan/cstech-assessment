@@ -10,9 +10,19 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    phone: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     password: {
         type: String,
         required: true,
+    },
+    role: {
+        type: String,
+        enum: ["admin", "agent"],
+        default: "admin",
     }
 });
 
