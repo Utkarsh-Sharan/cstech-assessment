@@ -1,24 +1,22 @@
 import mongoose, {Schema} from "mongoose";
 
-const agentSchema = new Schema({
-    name: {
-        type: String,
+const taskSchema = new Schema({
+    agentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
-    email: {
+    firstName: {
         type: String,
         required: true,
-        unique: true,
     },
     phone: {
         type: String,
         required: true,
-        unique: true,
     },
-    password: {
+    notes: {
         type: String,
-        required: true,
     }
 });
 
-export const Agent = mongoose.model("Agent", agentSchema);
+export const Task = mongoose.model("Task", taskSchema);
