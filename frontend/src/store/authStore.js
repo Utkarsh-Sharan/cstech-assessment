@@ -7,12 +7,18 @@ export const useAuthStore = create((set, get) => ({
 
     registerUser: async (data) => {
         try {
-            const res = await axiosInstance.post("/auth/register", formData);
+            const res = await axiosInstance.post("/auth/register", data);
 
             set({authUser: res.data.user});
-            toast.success(res.message);
+            toast.success(res.data.message);
         } catch (error) {
-            console.error("Failed to register", error);
+            const backend = error.response?.data;
+            const message = 
+                (backend?.errors && Object.values(backend.errors)[0]) ||
+                backend?.message ||
+                "Something went wrong!";
+            
+            toast.error(message);
         }
     },
 
@@ -23,7 +29,13 @@ export const useAuthStore = create((set, get) => ({
             set({authUser: res.data.user});
             toast.success(res.data.message);
         } catch (error) {
-            console.error("Failed to login", error);
+            const backend = error.response?.data;
+            const message = 
+                (backend?.errors && Object.values(backend.errors)[0]) ||
+                backend?.message ||
+                "Something went wrong!";
+            
+            toast.error(message);
         }
     },
 }));
