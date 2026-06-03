@@ -17,6 +17,7 @@ const SignupForm = ({handleToggle}) => {
 
   const handleSubmit = async () => {
     registerUser(formData);
+    handleToggle();
   }
     
   return (

@@ -1,4 +1,5 @@
 import AgentCard from '../components/dashboard/agent/AgentCard.jsx';
+import AgentList from '../components/dashboard/agent/AgentList.jsx';
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
 
 const DashboardPage = () => {
@@ -8,7 +9,7 @@ const DashboardPage = () => {
 
       <hr className='mt-4' />
 
-      <AgentCard />
+      <AgentList />
     </section>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { axiosInstance } from "../../utils/axios.js";
 import { useAuthStore } from '../../store/authStore.js';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({handleToggle}) => {
   const [formData, setFormData] = useState({
@@ -8,13 +9,15 @@ const LoginForm = ({handleToggle}) => {
     password: "",
   });
   const {loginUser} = useAuthStore();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     loginUser(formData);
+    navigate("/dashboard");
   }
 
   return (
