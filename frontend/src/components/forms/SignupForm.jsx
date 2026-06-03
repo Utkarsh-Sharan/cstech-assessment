@@ -20,8 +20,7 @@ const SignupForm = ({handleToggle}) => {
   }
     
   return (
-    <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4
-    w-11/12 md:w-2/6'>
+    <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4'>
       <h2 className='text-2xl font-bold'>Signup</h2>
 
       <label htmlFor='fullName'>Full name</label>
