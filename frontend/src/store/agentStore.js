@@ -25,4 +25,21 @@ export const useAgentStore = create((set, get) => ({
             toast.error(message);
         }
     },
+
+    createAgent: async (data) => {
+        try {
+            const res = await axiosInstance.post("/auth/register", data);
+
+            console.log(res);
+            toggleRerenderAgents();
+        } catch (error) {
+            const backend = error.response?.data;
+            const message = 
+                (backend?.errors && Object.values(backend.errors)[0]) ||
+                backend?.message ||
+                "Something went wrong!";
+            
+            toast.error(message);
+        }
+    }
 }));

@@ -12,11 +12,11 @@ const AgentList = () => {
   return (
     agents.length > 0 ?
     <section
-        className='mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'
+      className='mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'
     >
-        {agents.map((agent) => (
-            <AgentCard key={agent._id} data={agent} />
-        ))}
+      {agents.map((agent) => (
+        <AgentCard key={agent._id} data={agent} />
+      ))}
     </section> :
     <h4 className="text-xl font-semibold text-center mt-2">No agents created yet...</h4>
   )

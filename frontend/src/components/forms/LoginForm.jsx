@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { axiosInstance } from "../../utils/axios.js";
 import { useAuthStore } from '../../store/authStore.js';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ const LoginForm = ({handleToggle}) => {
     email: "",
     password: "",
   });
-  const {loginUser} = useAuthStore();
+  const {authUser, loginUser} = useAuthStore();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,8 +17,12 @@ const LoginForm = ({handleToggle}) => {
 
   const handleSubmit = () => {
     loginUser(formData);
-    navigate("/dashboard");
   }
+
+  useEffect(() => {
+    if(authUser)
+      navigate("/dashboard");
+  }, [authUser]);
 
   return (
     <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4'>
