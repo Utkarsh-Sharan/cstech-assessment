@@ -1,25 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { axiosInstance } from "../../utils/axios.js";
 import { useAuthStore } from '../../store/authStore.js';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({handleToggle}) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const {loginUser} = useAuthStore();
+  const {authUser, loginUser} = useAuthStore();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     loginUser(formData);
   }
 
+  useEffect(() => {
+    if(authUser)
+      navigate("/dashboard");
+  }, [authUser]);
+
   return (
-    <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4
-    w-11/12 md:w-2/6'>
+    <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4'>
       <h2 className='text-2xl font-bold'>Login</h2>
 
       <label htmlFor='email'>Email</label>

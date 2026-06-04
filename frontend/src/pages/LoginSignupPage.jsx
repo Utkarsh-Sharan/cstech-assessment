@@ -10,7 +10,7 @@ const LoginSignupPage = () => {
   }
 
   return (
-    <section className='h-full flex justify-center items-center'>
+    <section className='w-11/12 md:max-w-xl'>
       {toggleForm ? 
       <SignupForm handleToggle={handleToggle} /> : 
       <LoginForm handleToggle={handleToggle} />}
