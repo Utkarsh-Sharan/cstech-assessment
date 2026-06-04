@@ -1,7 +1,16 @@
 import { useAgentStore } from "../../store/agentStore.js"
+import FileUpload from "./FileUpload.jsx";
 
 const DashboardHeader = () => {
-  const {setIsAgentCreationModalOpen} = useAgentStore();
+  const {setIsAgentCreationModalOpen, uploadFile} = useAgentStore();
+
+  const handleFileUpload = (file) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    uploadFile(formData);
+  }
 
   return (
     <article className="flex justify-between items-center mt-2">
@@ -18,9 +27,7 @@ const DashboardHeader = () => {
                 Add agent
             </button>
 
-            <button className="bg-brand-accent rounded-md text-black px-4 py-1">
-                Upload file
-            </button>
+            <FileUpload onFileSelect={handleFileUpload} />
         </div>
     </article>
   )

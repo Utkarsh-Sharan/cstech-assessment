@@ -188,9 +188,27 @@ const uploadFile = async (req, res) => {
     }
 }
 
+const getAllTasks = async (req, res) => {
+    try {
+        const agentId = req.params.agentId;
+
+        const tasks = await Task.find({agentId: agentId});
+
+        if(!tasks) return res.status(409).json({message: "No tasks found!"});
+
+        return res.status(200).json({
+            message: "Tasks fetched successfully!",
+            tasks,
+        });
+    } catch (error) {
+        return res.status(400).json({message: "Failed to fetch tasks!", error});
+    }
+}
+
 export {
     registerUser,
     loginUser,
     uploadFile,
     getAllAgents,
+    getAllTasks,
 }

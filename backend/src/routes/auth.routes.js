@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { getAllAgents, loginUser, registerUser, uploadFile } from "../controllers/auth.controllers.js";
+import { getAllAgents, getAllTasks, loginUser, registerUser, uploadFile } from "../controllers/auth.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -35,5 +35,6 @@ router.route("/login").post(loginUser);
 //protected routes
 router.route("/get-agents").get(verifyJWT, getAllAgents);
 router.route("/upload-file").post(verifyJWT, upload.single("file"), uploadFile);
+router.route("/get-tasks/:agentId").get(verifyJWT, getAllTasks);
 
 export default router;

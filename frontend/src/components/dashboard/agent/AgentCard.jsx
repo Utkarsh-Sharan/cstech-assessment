@@ -1,4 +1,8 @@
+import { useAgentStore } from "../../../store/agentStore.js";
+
 const AgentCard = ({data}) => {
+  const {setIsTasksModalOpen} = useAgentStore();
+  
   return (
     <article className="bg-brand-secondary border border-brand-tertiary rounded-lg
     flex flex-col items-start justify-center p-2">
@@ -8,7 +12,10 @@ const AgentCard = ({data}) => {
 
       <p className="text-lg">{data.phone}</p>
 
-      <button className="mt-4 bg-brand-accent rounded-md px-2">
+      <button 
+        className="mt-4 bg-brand-accent rounded-md px-2"
+        onClick={() => setIsTasksModalOpen(true, data._id)}
+      >
         View Tasks
       </button>
     </article>

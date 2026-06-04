@@ -1,6 +1,7 @@
 import AgentCreationModal from '../components/dashboard/agent/AgentCreationModal.jsx';
 import AgentList from '../components/dashboard/agent/AgentList.jsx';
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
+import TaskModal from '../components/dashboard/TaskModal.jsx';
 
 const DashboardPage = () => {
   return (
@@ -12,6 +13,7 @@ const DashboardPage = () => {
       <AgentList />
 
       <AgentCreationModal />
+      <TaskModal />
     </section>
   )
 }
