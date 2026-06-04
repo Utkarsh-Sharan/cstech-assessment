@@ -5,9 +5,14 @@ import { axiosInstance } from "../utils/axios.js";
 export const useAgentStore = create((set, get) => ({
     agents: [],
     reRenderAgents: false,
+    isAgentCreationModalOpen: false,
 
     toggleRerenderAgents: () => {
         set({reRenderAgents: !get().reRenderAgents});
+    },
+
+    setIsAgentCreationModalOpen: (value) => {
+        set({isAgentCreationModalOpen: value});
     },
 
     getAllAgents: async () => {

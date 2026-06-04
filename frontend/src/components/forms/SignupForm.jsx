@@ -1,28 +1,37 @@
 import { useState } from "react";
 import { axiosInstance } from "../../utils/axios.js";
 import { useAuthStore } from "../../store/authStore.js";
+import { useAgentStore } from "../../store/agentStore.js";
 
-const SignupForm = ({handleToggle}) => {
+const SignupForm = ({handleToggle, isAgent}) => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     password: "",
+    role: "",
   });
   const {registerUser} = useAuthStore();
+  const {setIsAgentCreationModalOpen} = useAgentStore();
 
   const handleChange = (e) => {
     setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
   }
 
   const handleSubmit = async () => {
-    registerUser(formData);
-    handleToggle();
+    const data = {
+      ...formData,
+      role: isAgent ? "agent" : "admin",
+    }
+    setIsAgentCreationModalOpen(false);
+
+    registerUser(data);
+    if(!isAgent) handleToggle();
   }
     
   return (
     <article className='border border-brand-tertiary rounded-lg p-4 flex flex-col gap-4'>
-      <h2 className='text-2xl font-bold'>Signup</h2>
+      <h2 className='text-2xl font-bold'>{isAgent ? "Create Agent" : "Signup"}</h2>
 
       <label htmlFor='fullName'>Full name</label>
         <input 
@@ -69,10 +78,10 @@ const SignupForm = ({handleToggle}) => {
         className='bg-brand-accent text-black rounded-md py-2'
         onClick={handleSubmit}
       >
-        Signup
+        {isAgent ? "Create Agent" : "Signup"}
       </button>
 
-      <p className="text-center">
+      {!isAgent && <p className="text-center">
         Already have an account? {" "} 
         <span 
           className='text-brand-accent underline cursor-pointer'
@@ -80,7 +89,7 @@ const SignupForm = ({handleToggle}) => {
         >
           Login
         </span>
-      </p>
+      </p>}
     </article>
   )
 }

@@ -1,4 +1,8 @@
+import { useAgentStore } from "../../store/agentStore.js"
+
 const DashboardHeader = () => {
+  const {setIsAgentCreationModalOpen} = useAgentStore();
+
   return (
     <article className="flex justify-between items-center mt-2">
         <div>
@@ -7,7 +11,10 @@ const DashboardHeader = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-2">
-            <button className="bg-brand-tertiary rounded-md px-4 py-1">
+            <button 
+                className="bg-brand-tertiary rounded-md px-4 py-1"
+                onClick={() => setIsAgentCreationModalOpen(true)}
+            >
                 Add agent
             </button>
 

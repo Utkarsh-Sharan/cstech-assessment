@@ -9,7 +9,7 @@ import { Task } from "../models/task.model.js";
 
 const registerUser = async (req, res) => {
     try {
-        const {fullName, email, phone, password, role = "admin"} = req.body;
+        const {fullName, email, phone, password, role} = req.body;
 
         const userAlreadyExist = await User.findOne({email});
 
@@ -23,15 +23,17 @@ const registerUser = async (req, res) => {
             email,
             phone,
             password: hashedPassword,
-            role: role,
+            role,
         });
 
-        const token = jwt.sign({
-            id: user._id,
-            email: user.email,
-        }, process.env.JWT_SECRET);
-
-        res.cookie("token", token);
+        if(role === "admin") {
+            const token = jwt.sign({
+                id: user._id,
+                email: user.email,
+            }, process.env.JWT_SECRET);
+            
+            res.cookie("token", token);
+        }
 
         return res.status(201).json({
             message: "User registered successfully!",

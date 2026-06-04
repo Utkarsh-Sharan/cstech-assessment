@@ -1,3 +1,4 @@
+import AgentCreationModal from '../components/dashboard/agent/AgentCreationModal.jsx';
 import AgentList from '../components/dashboard/agent/AgentList.jsx';
 import DashboardHeader from '../components/dashboard/DashboardHeader.jsx';
 
@@ -9,6 +10,8 @@ const DashboardPage = () => {
       <hr className='mt-4' />
 
       <AgentList />
+
+      <AgentCreationModal />
     </section>
   )
 }
