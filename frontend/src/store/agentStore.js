@@ -35,8 +35,10 @@ export const useAgentStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/auth/register", data);
 
-            console.log(res);
+            set((state) => ({agents: [...state.agents, res.data.user]}));
             toggleRerenderAgents();
+
+            toast.success(res.data.message);
         } catch (error) {
             const backend = error.response?.data;
             const message = 

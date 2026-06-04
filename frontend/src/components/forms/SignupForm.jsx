@@ -12,7 +12,7 @@ const SignupForm = ({handleToggle, isAgent}) => {
     role: "",
   });
   const {registerUser} = useAuthStore();
-  const {setIsAgentCreationModalOpen} = useAgentStore();
+  const {setIsAgentCreationModalOpen, createAgent} = useAgentStore();
 
   const handleChange = (e) => {
     setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
@@ -25,7 +25,7 @@ const SignupForm = ({handleToggle, isAgent}) => {
     }
     setIsAgentCreationModalOpen(false);
 
-    registerUser(data);
+    isAgent ? createAgent(data) : registerUser(data);
     if(!isAgent) handleToggle();
   }
     

@@ -19,7 +19,7 @@ const AgentList = () => {
       ))}
     </section> :
     <h4 className="text-xl font-semibold text-center mt-2">No agents created yet...</h4>
-  )
+  );
 }
 
 export default AgentList
